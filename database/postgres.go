@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/jucabet/platzi-protobuffers-grpc/tree/main/models"
+	"github.com/jucabet/platzi-protobuffers-grpc/models"
 
 	_ "github.com/lib/pq"
 )
@@ -77,22 +77,50 @@ func (repo *PostgresRepository) SetQuestion(ctx context.Context, question *model
 	return err
 }
 
-func (repo *PostgresRepository) GetQuestion(ctx context.Context, id string) (*models.Question, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT id, question, answer, test_id FROM questions WHERE id = $1", id)
+func (repo *PostgresRepository) GetStudentsPerTest(ctx context.Context, testId string) ([]*models.Student, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, age from students WHERE id in (SELECT id FROM enrollments WHERE test_id = $1)", testId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var question = models.Question{}
+	var students []*models.Student
 	for rows.Next() {
-		err = rows.Scan(&question.Id, &question.Question, &question.Answer, &question.TestId)
-		if err != nil {
-			return nil, err
+		var student models.Student
+		if err = rows.Scan(&student.Id, &student.Name, &student.Age); err == nil {
+			students = append(students, &student)
 		}
-
-		return &question, nil
 	}
 
-	return &question, nil
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return students, nil
+}
+
+func (repo *PostgresRepository) SetEnrollment(ctx context.Context, enroll *models.Enrollment) error {
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO enrollments (student_id, test_id) VALUES ($1, $2)", enroll.StudentId, enroll.TestId)
+	return err
+}
+
+func (repo *PostgresRepository) GetQuestionsPerTest(ctx context.Context, testId string) ([]*models.Question, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, question FROM questions WHERE test_id = $1", testId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var questions []*models.Question
+	for rows.Next() {
+		var question models.Question
+		if err = rows.Scan(&question.Id, &question.Question); err == nil {
+			questions = append(questions, &question)
+		}
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return questions, nil
 }

@@ -3,9 +3,9 @@ package main
 import (
 	"net"
 
-	"github.com/jucabet/platzi-protobuffers-grpc/tree/main/database"
-	"github.com/jucabet/platzi-protobuffers-grpc/tree/main/server"
-	"github.com/jucabet/platzi-protobuffers-grpc/tree/main/studentpb"
+	"github.com/jucabet/platzi-protobuffers-grpc/database"
+	"github.com/jucabet/platzi-protobuffers-grpc/server"
+	"github.com/jucabet/platzi-protobuffers-grpc/studentpb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

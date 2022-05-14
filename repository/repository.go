@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/jucabet/platzi-protobuffers-grpc/tree/main/models"
+	"github.com/jucabet/platzi-protobuffers-grpc/models"
 )
 
 type Repository interface {
@@ -12,7 +12,9 @@ type Repository interface {
 	GetTest(ctx context.Context, id string) (*models.Test, error)
 	SetTest(ctx context.Context, test *models.Test) error
 	SetQuestion(ctx context.Context, question *models.Question) error
-	GetQuestion(ctx context.Context, id string) (*models.Question, error)
+	SetEnrollment(ctx context.Context, enroll *models.Enrollment) error
+	GetStudentsPerTest(ctx context.Context, id string) ([]*models.Student, error)
+	GetQuestionsPerTest(ctx context.Context, testId string) ([]*models.Question, error)
 }
 
 var implementation Repository
@@ -37,10 +39,18 @@ func SetTest(ctx context.Context, test *models.Test) error {
 	return implementation.SetTest(ctx, test)
 }
 
-func GetQuestion(ctx context.Context, id string) (*models.Question, error) {
-	return implementation.GetQuestion(ctx, id)
-}
-
 func SetQuestion(ctx context.Context, question *models.Question) error {
 	return implementation.SetQuestion(ctx, question)
+}
+
+func SetEnrollment(ctx context.Context, enroll *models.Enrollment) error {
+	return implementation.SetEnrollment(ctx, enroll)
+}
+
+func GetStudentsPerTest(ctx context.Context, id string) ([]*models.Student, error) {
+	return implementation.GetStudentsPerTest(ctx, id)
+}
+
+func GetQuestionsPerTest(ctx context.Context, testId string) ([]*models.Question, error) {
+	return implementation.GetQuestionsPerTest(ctx, testId)
 }

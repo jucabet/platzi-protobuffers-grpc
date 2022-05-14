@@ -3,9 +3,9 @@ package server
 import (
 	"context"
 
-	"github.com/jucabet/platzi-protobuffers-grpc/tree/main/models"
-	"github.com/jucabet/platzi-protobuffers-grpc/tree/main/repository"
-	"github.com/jucabet/platzi-protobuffers-grpc/tree/main/studentpb"
+	"github.com/jucabet/platzi-protobuffers-grpc/models"
+	"github.com/jucabet/platzi-protobuffers-grpc/repository"
+	"github.com/jucabet/platzi-protobuffers-grpc/studentpb"
 )
 
 type Server struct {
